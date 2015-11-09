@@ -1,0 +1,28 @@
+{
+  "name": "node-red-contrib-alljoyn",
+  "version": "0.0.1",
+  "description": "Node-RED nodes for Alljoyn functions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ADVANTECH-Corp/node-red-contrib-alljoyn.git"
+  },
+  "keywords": [
+    "Alljoyn",
+    "Advantech",
+    "Action"
+  ],
+  "author": "Advantech",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/ADVANTECH-Corp/node-red-contrib-alljoyn/issues"
+  },
+  "homepage": "https://github.com/ADVANTECH-Corp/node-red-contrib-alljoyn",
+  "dependencies": {
+    "node-alljoyn": "^0.1.0"
+  },
+  "node-red": {
+    "nodes": {
+      "Alljoyn-Action": "alljoyn-node/Alljoyn-Action.js"
+    }
+  }
+}
