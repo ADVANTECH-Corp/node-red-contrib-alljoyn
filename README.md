@@ -15,12 +15,12 @@ $ npm install node-red-contrib-alljoyn -g
 **Alljoyn-Action** Get action descriptions from any Alljoyn services and perform action via remote call.
 
 ### Usage example
-Add "Alljoyn Actions" to your flow and it can perform the specific "Action" for you.
+Add "Alljoyn Actions" to your flow and it can perform the specific "Action" for you.  
 ![Flow](./png/action-flow.png)
 
 To browse and select Alljoyn Actions from your proximal networks.
-If no Alljoyn service is found, you can try to "Refresh" agian.
-![Flow](./png/action-dialog.png)
+If no Alljoyn service is found, you can try to "Refresh" agian.  
+![Dialog](./png/action-dialog.png)
 
 ## History
 - v0.1.0 - Nov 2015 : Support "Alljoyn Action" function
