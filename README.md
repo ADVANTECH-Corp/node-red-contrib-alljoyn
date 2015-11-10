@@ -1,7 +1,7 @@
 # node-red-contrib-alljoyn
 A collection of [Node-RED](http://nodered.org) nodes to access Alljoyn services by [node-alljoyn](https://www.npmjs.com/package/node-alljoyn).
 
-## Install
+## Installation
 Use npm to command to install this package locally in the Node-RED modules directory
 ```bash
 $ npm install node-red-contrib-alljoyn
@@ -21,6 +21,12 @@ Add "Alljoyn Actions" to your flow and it can perform the specific "Action" for 
 To browse and select Alljoyn Actions from your proximal networks.
 If no Alljoyn service is found, you can try to "Refresh" agian.  
 ![Dialog](./png/action-dialog.png)
+
+## Test Platform
+- Linux (Yocto 1.5)
+
+## Known Issues
+- After reboot NODE-RED server, it cannot reconnect the Alljoyn connection which users set up previously. It needs to open Edit Dialog again to reconnect.
 
 ## History
 - v0.1.0 - Nov 2015 : Support "Alljoyn Action" function
