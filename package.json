@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-alljoyn",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Node-RED nodes for Alljoyn functions",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/ADVANTECH-Corp/node-red-contrib-alljoyn",
   "dependencies": {
-    "node-alljoyn": "^0.1.0"
+    "node-alljoyn": "^0.2.0"
   },
   "node-red": {
     "nodes": {

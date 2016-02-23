@@ -1,0 +1,620 @@
+<!--
+  Copyright 2015 Brendan Murray
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+
+<!-- Define the edit dialog -->
+<script type="text/x-red" data-template-name="Alljoyn-Get">
+
+    <div class="form-row">
+        <label for="node-input-operNow"><i class="fa fa-list"></i> Operation</label>
+        <select id="node-input-operNow" onchange="GetDevice()">
+            <option value="Get">Get</option>
+        </select>
+    </div>
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-deviceNow"><i class="fa fa-list"></i> Device</label>
+        <select id="node-input-deviceNow" onchange="GetCtlPanel()"></select>
+        <a href="#" class="editor-button" id="node-input-refresh"><i class="fa fa-refresh"></i></a>
+    </div>
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-ctlPanelNow"><i class="fa fa-list"></i> Control Panel</label>
+        <select id="node-input-ctlPanelNow" onchange="GetProperty()"></select>
+    </div>
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-propertyNow"><i class="fa fa-list"></i> Property</label>
+        <select id="node-input-propertyNow"></select>
+        <select id="node-input-propIndexNow"></select>
+    </div>
+    <br/>
+
+    <div class="form-row hidden">
+        <input type="text" id="node-input-operSaved">
+        <input type="text" id="node-input-deviceSaved">
+        <input type="text" id="node-input-ctlPanelSaved">
+        <input type="text" id="node-input-propertySaved">
+        <input type="text" id="node-input-propIndexSaved">
+        <input type="text" id="node-input-operOpts">
+        <input type="text" id="node-input-deviceOpts">
+        <input type="text" id="node-input-ctlPanelOpts">
+        <input type="text" id="node-input-propertyOpts">
+        <input type="text" id="node-input-propIndexOpts">
+    </div>
+
+    <!-- Node name -->
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+
+<!-- Next, some simple help text is provided for the node -->
+<script type="text/x-red" data-help-name="Alljoyn-Get">
+    <p>Node to get/set the property of Alljoyn, triggered 
+        by an input.</p>
+    <p>Outputs a <b>msg</b> containing <b>msg.payload</b> containing the 
+        JSON description of reading or result.</p>
+</script>
+
+<script type="text/x-red" data-template-name="Alljoyn-Set">
+
+    <div class="form-row">
+        <label for="node-input-operNow"><i class="fa fa-list"></i> Operation</label>
+        <select id="node-input-operNow" onchange="GetDevice()">
+            <option value="Set">Set</option>
+        </select>
+    </div>
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-deviceNow"><i class="fa fa-list"></i> Device</label>
+        <select id="node-input-deviceNow" onchange="GetCtlPanel()"></select>
+        <a href="#" class="editor-button" id="node-input-refresh"><i class="fa fa-refresh"></i></a>
+    </div>
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-ctlPanelNow"><i class="fa fa-list"></i> Control Panel</label>
+        <select id="node-input-ctlPanelNow" onchange="GetProperty()"></select>
+    </div>
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-propertyNow"><i class="fa fa-list"></i> Property</label>
+        <select id="node-input-propertyNow"></select>
+        <select id="node-input-propIndexNow"></select>
+    </div>
+    <br/>
+
+    <div class="form-row">
+        <label for="node-input-setvalue"><i class="icon-tag"></i> Set to</label>
+        <input type="text" id="node-input-setvalue" placeholder="value">
+    </div>
+    <br/>
+
+    <div class="form-row hidden">
+        <input type="text" id="node-input-operSaved">
+        <input type="text" id="node-input-deviceSaved">
+        <input type="text" id="node-input-ctlPanelSaved">
+        <input type="text" id="node-input-propertySaved">
+        <input type="text" id="node-input-propIndexSaved">
+        <input type="text" id="node-input-operOpts">
+        <input type="text" id="node-input-deviceOpts">
+        <input type="text" id="node-input-ctlPanelOpts">
+        <input type="text" id="node-input-propertyOpts">
+        <input type="text" id="node-input-propIndexOpts">
+    </div>
+
+    <!-- Node name -->
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+
+<!-- Next, some simple help text is provided for the node -->
+<script type="text/x-red" data-help-name="Alljoyn-Set">
+    <p>Node to get/set the property of Alljoyn, triggered 
+        by an input.</p>
+    <p>Outputs a <b>msg</b> containing <b>msg.payload</b> containing the 
+        JSON description of reading or result.</p>
+</script>
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('Alljoyn-Get', {
+        category: 'ADVANTECH',      // the palette category
+        defaults: {                 // defines the editable properties of the node
+            name:           {value: ""},
+            operNow:        {value: "", required:true},
+            deviceNow:      {value: "", required:true},
+            ctlPanelNow:    {value: "", required:true},
+            propertyNow:    {value: "", required:true},
+            propIndexNow:   {value: ""},
+            setvalue:       {value: ""},
+
+            operSaved:      {value: ""},
+            deviceSaved:    {value: ""},
+            ctlPanelSaved:  {value: ""},
+            propertySaved:  {value: ""},
+            propIndexSaved: {value: ""},
+
+            deviceOpts:     {value: ""},
+            ctlPanelOpts:   {value: ""},
+            propertyOpts:   {value: ""},
+            propIndexOpts:   {value: ""},
+        },
+        inputs:  1,                 // set the number of inputs - only 0 or 1
+        outputs: 1,                 // set the number of outputs - 0 to n
+        color:   "#C0DEED",
+        icon:    "dht.png",         // saved in  icons/myicon.png
+        paletteLabel: "Alljoyn-Get",
+        label:  function() {        // sets the default label contents
+                    return this.name||this.topic||"Alljoyn-Get";
+                },
+        labelStyle: function() {    // sets the class to apply to the label
+                        return this.name ? "node_label_italic": "";
+                },
+        oneditprepare: sn_oneditprepare,
+        oneditsave: sn_oneditsave,
+    });
+
+    RED.nodes.registerType('Alljoyn-Set', {
+        category: 'ADVANTECH',      // the palette category
+        defaults: {                 // defines the editable properties of the node
+            name:           {value: ""},
+            operNow:        {value: "", required:true},
+            deviceNow:      {value: "", required:true},
+            ctlPanelNow:    {value: "", required:true},
+            propertyNow:    {value: "", required:true},
+            propIndexNow:   {value: ""},
+            setvalue:       {value: ""},
+
+            operSaved:      {value: ""},
+            deviceSaved:    {value: ""},
+            ctlPanelSaved:  {value: ""},
+            propertySaved:  {value: ""},
+            propIndexSaved: {value: ""},
+
+            deviceOpts:     {value: ""},
+            ctlPanelOpts:   {value: ""},
+            propertyOpts:   {value: ""},
+            propIndexOpts:   {value: ""},
+        },
+        inputs:  1,                 // set the number of inputs - only 0 or 1
+        outputs: 1,                 // set the number of outputs - 0 to n
+        color:   "#C0DEED",
+        icon:    "dht.png",         // saved in  icons/myicon.png
+        align: "right",
+        paletteLabel: "Alljoyn-Set",
+        label:  function() {        // sets the default label contents
+                    return this.topic||"Alljoyn-Set"||this.name;
+                },
+        labelStyle: function() {    // sets the class to apply to the label
+                        return this.name ? "node_label_italic": "";
+                },
+        oneditprepare: sn_oneditprepare,
+        oneditsave: sn_oneditsave,
+    });
+
+
+    $.valHooks.textarea = {
+        get: function( elem ) {
+            return elem.value.replace( /\r?\n/g, "\r\n" );
+        }
+    };	
+
+    function RefreshSelects() {
+        RED.notify("Refresh: clean state!", "info");
+
+        $("#node-input-operNow").val('');
+        $("#node-input-deviceNow").val('');
+        $("#node-input-ctlPanelNow").val('');
+        $("#node-input-propertyNow").val('');
+        $("#node-input-propIndexNow").val('');
+
+        $("#node-input-deviceNow option").remove();
+        $("#node-input-ctlPanelNow option").remove();
+        $("#node-input-propertyNow option").remove();
+        $("#node-input-propIndexNow option").remove();
+
+        $("#node-input-operSaved").val('');
+        $("#node-input-deviceSaved").val('');
+        $("#node-input-ctlPanelSaved").val('');
+        $("#node-input-propertySaved").val('');
+        $("#node-input-propIndexSaved").val('');
+
+        $("#node-input-deviceOpts").val('');
+        $("#node-input-ctlPanelOpts").val('');
+        $("#node-input-propertyOpts").val('');
+        $("#node-input-propIndexOpts").val('');
+    }
+
+    var editOpenCnt = 0;
+
+    function GetDevice() {
+        //RED.notify("!On Oper Change, get device!", "info");
+        //RED.notify("GetDevice(): this.deviceNow=" + this.deviceNow, "info");
+
+        //var deviceVal = $("#node-input-deviceNow").val();
+        var deviceText = $("#node-input-deviceNow option:selected").text();
+        //RED.notify("GetDevice(): deviceText=" + deviceText, "info");
+        
+        if (editOpenCnt < 3) {
+            editOpenCnt++;
+        } else {
+            $("#node-input-deviceNow").val('');
+            $("#node-input-ctlPanelNow").val('');
+            $("#node-input-propertyNow").val('');
+            $("#node-input-propIndexNow").val('');
+        }
+
+        var operText = $("#node-input-operNow option:selected").text();
+        if (operText === "Set") {
+            $("#node-input-setvalue").removeAttr('disabled');
+        } else {
+            $("#node-input-setvalue").attr('disabled', 'disabled');
+        }
+
+        $.getJSON('Alljoyn-GetSet-GetDevice', function(data) {
+            var isOrgValFound = false;
+            var orgDeviceVal = "";
+            
+            $("#node-input-deviceNow option").remove();
+            $("#node-input-ctlPanelNow option").remove();
+            $("#node-input-propertyNow option").remove();
+            $("#node-input-propIndexNow option").remove(); 
+            if (data != null) {
+                var deviceList = "";
+                for (var i=0; i<data[0].length; i++) {
+                    //RED.notify("data[0][" + i + "]=" + data[0][i], "info");
+
+                    // TODO: future solution to handle special char like ' ' '(' ...
+                    var deviceStrArray = data[0][i].split(/[\s]+/);
+                    //RED.notify("data after split=" + data[0][i], "info");
+                    var deviceVal = "";
+                    for (var j=0; j<deviceStrArray.length; j++) {
+                        if (j !== 0) {
+                            deviceVal += "_";
+                        }
+                        deviceVal += deviceStrArray[j];
+                    }
+                    //RED.notify("deviceVal=" + deviceVal, "info");
+                    //RED.notify("deviceText=" + deviceText, "info");
+
+                    //deviceList = deviceList + "<option value=" + data[0][i] + ">" + data[0][i] + "</option>";
+                    deviceList = deviceList + "<option value=" + i + ">" + data[0][i] + "</option>";
+
+                    if (deviceText === data[0][i]) {
+                        isOrgValFound = true;
+                        orgDeviceVal = i;
+                    } else {
+                        //RED.notify("data=" + data[0][i], "info");
+                    }
+                }
+                $("#node-input-deviceNow").html(deviceList);
+                RED.notify("Get DeviceName!", "info");
+            }
+
+            if (isOrgValFound == true) {
+                //RED.notify("set old device:" + orgDeviceVal, "info");
+                //$("#node-input-deviceNow").val(deviceVal);    // empty select, why?
+                $("#node-input-deviceNow").val(orgDeviceVal);
+                //$("#node-input-deviceNow").append($("<option></option>").attr("value", deviceVal).text(deviceVal));    // 2 same options ?
+            } else {
+                //RED.notify("set null intf", "info");
+                $("#node-input-deviceNow").val('');
+            }
+        });
+
+    };
+
+    function GetCtlPanel() {
+        //RED.notify("!On Device Change, get ctlPanel!", "info");
+
+        // .val() cannot handle space between words
+        //var deviceVal = $("#node-input-deviceNow").val();
+        var deviceVal = $("#node-input-deviceNow option:selected").val();
+        //RED.notify("GetCtlPanel!+ deviceVal:" + deviceVal, "info");
+        
+        var deviceText = $("#node-input-deviceNow option:selected").text();
+        if (deviceText === null) {
+            deviceText = $("#node-input-deviceSaved").val();
+            if (deviceText === undefined || deviceText === null || deviceText === "") {
+                return;
+            }
+        }
+        //RED.notify("GetCtlPanel(): org deviceVal=" + deviceVal, "info");
+
+        //var ctlPanelVal = $("#node-input-ctlPanelNow").val();
+        var ctlPanelText = $("#node-input-ctlPanelNow option:selected").text();
+
+        if (editOpenCnt < 3) {
+            editOpenCnt++;
+        } else {
+            $("#node-input-ctlPanelNow").val('');
+            $("#node-input-propertyNow").val('');
+            $("#node-input-propIndexNow").val('');
+        }
+
+        $.getJSON('Alljoyn-GetSet-GetCtlPanel/' + deviceVal, function(data) {
+            var isOrgValFound = false;
+            var orgCtlPanelVal = "";
+            
+            $("#node-input-ctlPanelNow option").remove();
+            $("#node-input-propertyNow option").remove();
+            $("#node-input-propIndexNow option").remove();
+             
+            if (data != null) {
+                var ctlPanelList = "";
+                for (var i=0; i<data[1].length; i++) {
+
+                   // TODO: future solution to handle special char like ' ' '(' ...
+                    var ctlPanelStrArray = data[1][i].split(/[\s]+/);
+                    //RED.notify("data after split=" + data[1][i], "info");
+                    var ctlPanelVal = "";
+                    for (var j=0; j<ctlPanelStrArray.length; j++) {
+                        if (j !== 0) {
+                            ctlPanelVal += "_";
+                        }
+                        ctlPanelVal += ctlPanelStrArray[j];
+                    }
+                    //RED.notify("ctlPanelVal=" + ctlPanelVal, "info");
+
+                    //ctlPanelList = ctlPanelList + "<option value=" + data[1][i] + ">" + data[1][i] + "</option>";
+                    ctlPanelList = ctlPanelList + "<option value=" + i + ">" + data[1][i] + "</option>";
+
+                    if (ctlPanelText === data[1][i]) {
+                        isOrgValFound = true;
+                        orgCtlPanelVal = i;
+                    }
+                }
+                $("#node-input-ctlPanelNow").html(ctlPanelList);
+                RED.notify("Get ctlPanelName!", "info");
+            }
+
+            if (isOrgValFound == true) {
+                //RED.notify("set old ctlPanel:" + orgCtlPanelVal, "info");
+                $("#node-input-ctlPanelNow").val(orgCtlPanelVal);
+            } else {
+                //RED.notify("set null intf", "info");
+                $("#node-input-ctlPanelNow").val('');
+            }
+        });
+    };
+
+    function GetProperty() {
+        //RED.notify("!On ctlPanel Change, get property!", "info");
+
+
+
+        var operText = $("#node-input-operNow option:selected").text();
+        if (operText === "Set") {
+            //$("#node-input-setvalue").removeAttr('disabled');
+        } else {
+            //$("#node-input-setvalue").attr('disabled', 'disabled');
+        }
+
+        var deviceText = $("#node-input-deviceNow option:selected").text();
+        if (deviceText === null) {
+            deviceText = $("#node-input-deviceSaved").val();
+            if (deviceText === undefined || deviceText === null || deviceText === "") {
+                return;
+            }
+        }
+        //RED.notify("GetProperty(): org deviceText=" + deviceText, "info");
+        var ctlPanelVal = $("#node-input-ctlPanelNow option:selected").val();
+        //RED.notify("GetProperty!+ ctlPanelVal:" + ctlPanelVal, "info");
+        
+        var ctlPanelText = $("#node-input-ctlPanelNow option:selected").text();
+        if (ctlPanelText === null) {
+            ctlPanelText = $("#node-input-ctlPanelSaved").val();
+            if (ctlPanelText === undefined || ctlPanelText === null || ctlPanelText === "") {
+                return;
+            }
+        }
+        //RED.notify("GetCtlPanel(): org deviceVal=" + deviceVal, "info");
+
+        var propertyText = $("#node-input-propertyNow option:selected").text();
+        var propIndexText = $("#node-input-propIndexNow option:selected").text();
+
+        //RED.notify("GetAttribOfTopic: editOpenCnt=" + editOpenCnt, "info");
+        if (editOpenCnt < 3) {  // change counter from 3 to 4 ??
+            editOpenCnt++;
+        } else {
+            $("#node-input-propertyNow").val('');
+            $("#node-input-propIndexNow").val('');
+        }
+
+        //$.getJSON('Alljoyn-GetSet-GetProperty/' + operText + '/' + deviceText + '/' + ctlPanelText, function(data) {
+        $.getJSON('Alljoyn-GetSet-GetProperty/' + operText + '/' + ctlPanelVal, function(data) {
+            var isOrgPropFound = false;
+            var isOrgPropIndexFound = false;
+            var orgPropertyVal = "";
+            var orgPropIndexVal = "";
+            $("#node-input-propertyNow option").remove();
+            $("#node-input-propIndexNow option").remove();          
+
+            if (data != null) {
+                var propertyList = "";
+                // add 'all' option ?
+
+                for (var i=0; i<data[2].length; i++) {
+
+                    // TODO: future solution to handle special char like ' ' '(' ...
+                    var propertyStrArray = data[2][i].split(/[\s]+/);
+                    //RED.notify("data after split=" + data[2][i], "info");
+                    var propertyVal = "";
+                    for (var j=0; j<propertyStrArray.length; j++) {
+                        if (j !== 0) {
+                            propertyVal += "_";
+                        }
+                        propertyVal += propertyStrArray[j];
+                    }
+                    //RED.notify("propertyVal=" + propertyVal, "info");
+
+                    //propertyList = propertyList + "<option value=" + data[2][i] + ">" + data[2][i] + "</option>";
+                    propertyList = propertyList + "<option value=" + i + ">" + data[2][i] + "</option>";
+
+                    if (propertyText === data[2][i]) {
+                        isOrgPropFound = true;
+                        orgPropertyVal = i;
+                    }
+                }
+                //test();
+                $("#node-input-propertyNow").html(propertyList);
+
+                var propIndexList = "";
+
+                for (var i=0; i<data[3].length; i++) {
+
+                    // TODO: future solution to handle special char like ' ' '(' ...
+                    var propIndexStrArray = data[3][i].split(/[\s]+/);
+                    //RED.notify("data after split=" + data[3][i], "info");
+                    var propIndexVal = "";
+                    for (var j=0; j<propIndexStrArray.length; j++) {
+                        if (j !== 0) {
+                            propIndexVal += "_";
+                        }
+                        propIndexVal += propIndexStrArray[j];
+                    }
+                    //RED.notify("propIndexVal=" + propIndexVal, "info");
+
+                    propIndexList = propIndexList + "<option value=" + i + ">" + data[3][i] + "</option>";
+
+                    if (propIndexText === data[3][i]) {
+                        isOrgPropIndexFound = true;
+                        orgPropIndexVal = i;
+                    }
+                }
+                //test();
+                $("#node-input-propIndexNow").html(propIndexList);
+                RED.notify("Get PropertyName!", "info");
+            }
+
+            if (isOrgPropFound == true) {
+                //RED.notify("set old orgPropertyVal:" + orgPropertyVal, "info");
+                $("#node-input-propertyNow").val(orgPropertyVal);
+            } else {
+                $("#node-input-propertyNow").val('');
+            }
+
+            if (isOrgPropIndexFound == true) {
+                //RED.notify("set old orgPropertyVal:" + orgPropertyVal, "info");
+                $("#node-input-propIndexNow").val(orgPropIndexVal);
+            } else {
+                $("#node-input-propIndexNow").val('');
+            }
+        });        
+    };
+	
+    function sn_oneditprepare() {
+        editOpenCnt = 0;
+        //RED.notify("On Edit prepare!", "info");
+        //RED.notify("typeNow:"+this.typeNow, "info");
+        //RED.notify("intfNow:"+this.intfNow, "info");
+        //RED.notify("devNow:"+this.devNow, "info");
+        //RED.notify("topicNow:"+this.topicNow, "info");
+        //RED.notify("attribNow:"+this.attribNow, "info");
+
+        
+
+        if (this.deviceOpts && this.ctlPanelOpts && this.propertyOpts) {
+            RED.notify("restore settings begine!", "info");
+
+            //RED.notify("oneditprepare(): this.operNow=" + this.operNow, "info");
+
+            //var deviceVal = $("#node-input-deviceNow option:selected").text();    // undefined
+            //var deviceVal = $("#node-input-deviceNow").text();    // undefined
+            //RED.notify("oneditprepare(): deviceNow.text=" + deviceVal, "info");    // undefined
+
+            // this.deviceNow does NOT contain whitespace
+//            RED.notify("oneditprepare(): this.deviceNow=" + this.deviceNow, "info");
+            //deviceSaved = $("#node-input-deviceSaved").val();
+//            RED.notify("oneditprepare(): deviceSaved=" +  $("#node-input-deviceSaved").val(), "info");
+
+            //$("#node-input-deviceNow").val(deviceSaved);    / /empty
+            //$("#node-input-deviceNow").append($("<option></option>").attr("value", this.deviceNow).text(this.deviceNow));
+$("#node-input-deviceNow").append($("<option></option>").attr("value", this.deviceNow).text($("#node-input-deviceSaved").val()));
+            //$("#node-input-deviceNow").append($("<option></option>").attr("value", deviceSaved).text(deviceSaved));    // this line set option selected for next line. but do not show in select box
+            //var deviceVal = $("#node-input-deviceNow option:selected").text();
+//            RED.notify("oneditprepare(): selected deviceText=" + $("#node-input-deviceNow option:selected").text(), "info");
+
+            //ctlPanelSaved = $("#node-input-ctlPanelSaved").val();            
+         //$("#node-input-ctlPanelNow").append($("<option></option>").attr("value", this.ctlPanelNow).text(this.ctlPanelNow));
+$("#node-input-ctlPanelNow").append($("<option></option>").attr("value", this.ctlPanelNow).text($("#node-input-ctlPanelSaved").val()));
+            //$("#node-input-ctlPanelNow").append($("<option></option>").attr("value", ctlPanelSaved).text(ctlPanelSaved));
+
+            //propertySaved = $("#node-input-propertySaved").val();
+         //$("#node-input-propertyNow").append($("<option></option>").attr("value", this.propertyNow).text(this.propertyNow));
+$("#node-input-propertyNow").append($("<option></option>").attr("value", this.propertyNow).text($("#node-input-propertySaved").val()));
+            //$("#node-input-propertyNow").append($("<option></option>").attr("value", propertySaved).text(propertySaved));
+
+$("#node-input-propIndexNow").append($("<option></option>").attr("value", this.propIndexNow).text($("#node-input-propIndexSaved").val()));
+        } else {
+            //RED.notify("OnEditprepare: info not complete", "info");            
+            RefreshSelects();
+        } 
+        //RED.notify("restore settings end!", "info");
+        $("#node-input-refresh").on("click", RefreshSelects);
+    };
+
+    function sn_oneditsave() {
+        //RED.notify("On Edit Save!", "info");
+        var value = null;
+        var opts = null;
+
+        //value = $("#node-input-operNow").val();
+        value = $("#node-input-operNow option:selected").text();
+        $("#node-input-operSaved").val(value);
+        opts = $("#node-input-operNow").html();
+        $("#node-input-operOpts").val(opts);
+
+        //value = $("#node-input-deviceNow").val();
+        value = $("#node-input-deviceNow option:selected").text();
+        //RED.notify("oneditsave(): device:" + value);
+        $("#node-input-deviceSaved").val(value);
+        opts = $("#node-input-deviceNow").html();
+        $("#node-input-deviceOpts").val(opts);
+        
+        //value = $("#node-input-ctlPanelNow").val();
+        value = $("#node-input-ctlPanelNow option:selected").text();
+        $("#node-input-ctlPanelSaved").val(value);
+        opts = $("#node-input-ctlPanelNow").html();
+        $("#node-input-ctlPanelOpts").val(opts);
+
+        //value = $("#node-input-propertyNow").val();
+        value = $("#node-input-propertyNow option:selected").text();
+        $("#node-input-propertySaved").val(value);            
+        var opts = $("#node-input-propertyNow").html();
+        $("#node-input-propertyOpts").val(opts);
+
+        value = $("#node-input-propIndexNow option:selected").text();
+        $("#node-input-propIndexSaved").val(value);
+        var opts = $("#node-input-propIndexNow").html();
+        $("#node-input-propIndexOpts").val(opts);
+    }
+</script>
+
+
+
