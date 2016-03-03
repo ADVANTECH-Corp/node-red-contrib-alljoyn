@@ -9,7 +9,9 @@
   "keywords": [
     "Alljoyn",
     "Advantech",
-    "Action"
+    "Action",
+    "ControlPanel",
+    "Property"
   ],
   "author": "Advantech",
   "license": "Apache-2.0",
@@ -23,6 +25,7 @@
   "node-red": {
     "nodes": {
       "Alljoyn-Action": "alljoyn-node/Alljoyn-Action.js"
+      "Alljoyn-GetSet": "alljoyn-node/Alljoyn-GetSet.js"
     }
   }
 }
