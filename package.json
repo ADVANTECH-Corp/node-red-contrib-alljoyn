@@ -24,7 +24,7 @@
   },
   "node-red": {
     "nodes": {
-      "Alljoyn-Action": "alljoyn-node/Alljoyn-Action.js"
+      "Alljoyn-Action": "alljoyn-node/Alljoyn-Action.js",
       "Alljoyn-GetSet": "alljoyn-node/Alljoyn-GetSet.js"
     }
   }
