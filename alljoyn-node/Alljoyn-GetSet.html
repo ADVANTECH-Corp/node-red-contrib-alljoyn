@@ -16,7 +16,7 @@
 
 
 <!-- Define the edit dialog -->
-<script type="text/x-red" data-template-name="Alljoyn-Get">
+<script type="text/x-red" data-template-name="ControlPanel-Get">
 
     <div class="form-row">
         <label for="node-input-operNow"><i class="fa fa-list"></i> Operation</label>
@@ -68,14 +68,14 @@
 
 
 <!-- Next, some simple help text is provided for the node -->
-<script type="text/x-red" data-help-name="Alljoyn-Get">
+<script type="text/x-red" data-help-name="ControlPanel-Get">
     <p>Node to get/set the property of Alljoyn, triggered 
         by an input.</p>
     <p>Outputs a <b>msg</b> containing <b>msg.payload</b> containing the 
         JSON description of reading or result.</p>
 </script>
 
-<script type="text/x-red" data-template-name="Alljoyn-Set">
+<script type="text/x-red" data-template-name="ControlPanel-Set">
 
     <div class="form-row">
         <label for="node-input-operNow"><i class="fa fa-list"></i> Operation</label>
@@ -133,7 +133,7 @@
 
 
 <!-- Next, some simple help text is provided for the node -->
-<script type="text/x-red" data-help-name="Alljoyn-Set">
+<script type="text/x-red" data-help-name="ControlPanel-Set">
     <p>Node to get/set the property of Alljoyn, triggered 
         by an input.</p>
     <p>Outputs a <b>msg</b> containing <b>msg.payload</b> containing the 
@@ -142,7 +142,7 @@
 
 
 <script type="text/javascript">
-    RED.nodes.registerType('Alljoyn-Get', {
+    RED.nodes.registerType('ControlPanel-Get', {
         category: 'ADVANTECH',      // the palette category
         defaults: {                 // defines the editable properties of the node
             name:           {value: ""},
@@ -168,9 +168,9 @@
         outputs: 1,                 // set the number of outputs - 0 to n
         color:   "#C0DEED",
         icon:    "dht.png",         // saved in  icons/myicon.png
-        paletteLabel: "Alljoyn-Get",
+        paletteLabel: "ControlPanel",
         label:  function() {        // sets the default label contents
-                    return this.name||this.topic||"Alljoyn-Get";
+                    return this.name||this.topic||"ControlPanel";
                 },
         labelStyle: function() {    // sets the class to apply to the label
                         return this.name ? "node_label_italic": "";
@@ -179,7 +179,7 @@
         oneditsave: sn_oneditsave,
     });
 
-    RED.nodes.registerType('Alljoyn-Set', {
+    RED.nodes.registerType('ControlPanel-Set', {
         category: 'ADVANTECH',      // the palette category
         defaults: {                 // defines the editable properties of the node
             name:           {value: ""},
@@ -206,9 +206,9 @@
         color:   "#C0DEED",
         icon:    "dht.png",         // saved in  icons/myicon.png
         align: "right",
-        paletteLabel: "Alljoyn-Set",
+        paletteLabel: "ControlPanel",
         label:  function() {        // sets the default label contents
-                    return this.topic||"Alljoyn-Set"||this.name;
+                    return this.topic||"ControlPanel"||this.name;
                 },
         labelStyle: function() {    // sets the class to apply to the label
                         return this.name ? "node_label_italic": "";
@@ -304,7 +304,7 @@
 
                     //deviceList = deviceList + "<option value=" + data[0][i] + ">" + data[0][i] + "</option>";
                     deviceList = deviceList + "<option value=" + i + ">" + data[0][i] + "</option>";
-
+                    
                     if (deviceText === data[0][i]) {
                         isOrgValFound = true;
                         orgDeviceVal = i;

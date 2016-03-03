@@ -351,8 +351,8 @@ module.exports = function(RED) {
         });
     }
     // Register the node by name.
-    RED.nodes.registerType("Alljoyn-Get", AlljoynGet);
-    RED.nodes.registerType("Alljoyn-Set", AlljoynSet);
+    RED.nodes.registerType("ControlPanel-Get", AlljoynGet);
+    RED.nodes.registerType("ControlPanel-Set", AlljoynSet);
 
 
     // response for HTML control
