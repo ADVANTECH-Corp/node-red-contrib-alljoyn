@@ -107,8 +107,13 @@ module.exports = function(RED) {
                 //Items[2].push("Board Name");
                 //Items[2].push("Board Manufacturer");
 
-                // try catch ?
-                var propertyJsonObj = JSON.parse(propertyString);
+                var propertyJsonObj = null;
+                try {
+                    propertyJsonObj = JSON.parse(propertyString);
+                } catch (e) {
+                    console.log("Input Json:" + propertyString + " :parse error:
+                    return;
+                }
                 //if (node.ctlPanelNow === "DisplayContainer" || node.ctlPanelNow === "GPIOContainer") {
                 if (node.ctlPanelNow == 3 || node.ctlPanelNow == 4) {
                     //var propIndex = -1;
@@ -262,8 +267,14 @@ module.exports = function(RED) {
                 //Items[2].push("Board Name");
                 //Items[2].push("Board Manufacturer");
 
-                // try catch ?
-                var propertyJsonObj = JSON.parse(propertyString);
+                var propertyJsonObj = null;
+                try {
+                    propertyJsonObj = JSON.parse(propertyString);
+                } catch (e) {
+                    console.log("Input Json:" + propertyString + " :parse error:
+                    return;
+                }
+
                 //if (node.ctlPanelNow === "DisplayContainer" || node.ctlPanelNow === "GPIOContainer") {
                 if (node.ctlPanelNow == 3 || node.ctlPanelNow == 4) {
                     //var propIndex = -1;
