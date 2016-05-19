@@ -111,7 +111,7 @@ module.exports = function(RED) {
                 try {
                     propertyJsonObj = JSON.parse(propertyString);
                 } catch (e) {
-                    console.log("Input Json:" + propertyString + " :parse error:
+                    console.log("Input Json:" + propertyString + " :parse error: " + e);
                     return;
                 }
                 //if (node.ctlPanelNow === "DisplayContainer" || node.ctlPanelNow === "GPIOContainer") {
@@ -271,7 +271,7 @@ module.exports = function(RED) {
                 try {
                     propertyJsonObj = JSON.parse(propertyString);
                 } catch (e) {
-                    console.log("Input Json:" + propertyString + " :parse error:
+                    console.log("Input Json:" + propertyString + " :parse error: " + e);
                     return;
                 }
 
