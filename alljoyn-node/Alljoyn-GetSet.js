@@ -151,12 +151,17 @@ module.exports = function(RED) {
                             for (var property in propertyJsonObj) {
                                 if (propertyJsonObj[property]['name'] === node.propertySaved) {
                                     if (node.operNow === "Set") {
+                                        var msg = {};
                                         var targetPropIndex = propertyJsonObj[property]['index'];
                                         //console.log("propertyJsonObj[property]['index']=" + targetPropIndex);
                                         var setResult = alljoyn.setProperty("{{\"index\":\"" + targetPropIndex  + "\", \"value\":\"" + node.setvalue + "\"}}");
                                         //var setResult = alljoyn.setProperty("{{\"index\":\"1\", \"value\":\"7\"}}");
                                         //var setResult = alljoyn.setProperty("{{\"index\":\"0\", \"value\":\"2\"},{\"index\":\"1\", \"value\":\"7\"}}");
                                         console.log("set result=" + setResult);
+                                        msg.payload = 'ControlPanel-SET: Set '+ node.setvalue +'. Done.';
+                                        msg.topic = node.topic || node.name;
+                                        node.send(msg);
+                                        break;                                        
                                     } else {
                                         var msg = {};
                                         msg.payload = JSON.stringify(propertyJsonObj[property]);
@@ -312,12 +317,18 @@ module.exports = function(RED) {
                             for (var property in propertyJsonObj) {
                                 if (propertyJsonObj[property]['name'] === node.propertySaved) {
                                     if (node.operNow === "Set") {
+                                        var msg = {};
                                         var targetPropIndex = propertyJsonObj[property]['index'];
                                         //console.log("propertyJsonObj[property]['index']=" + targetPropIndex);
                                         var setResult = alljoyn.setProperty("{{\"index\":\"" + targetPropIndex  + "\", \"value\":\"" + node.setvalue + "\"}}");
                                         //var setResult = alljoyn.setProperty("{{\"index\":\"1\", \"value\":\"7\"}}");
                                         //var setResult = alljoyn.setProperty("{{\"index\":\"0\", \"value\":\"2\"},{\"index\":\"1\", \"value\":\"7\"}}");
                                         console.log("set result=" + setResult);
+                                        
+                                        msg.payload = 'ControlPanel-SET: Set '+ node.setvalue +'. Done.';
+                                        msg.topic = node.topic || node.name;
+                                        node.send(msg);
+                                        break;                                        
                                     } else {
                                         var msg = {};
                                         msg.payload = JSON.stringify(propertyJsonObj[property]);
